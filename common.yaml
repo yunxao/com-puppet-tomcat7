@@ -1,1 +1,9 @@
+tomcat_service_name : 'tomcat7'
+tomcat_version : &version '7.0.42'
+tomcat_package : 
+ - "apache-tomcat-" 
+ - *version 
+ - ".tar.gz"
 java_home : 'tomcat7/common/hello'
+tmp : "%{::osfamily}"
+
