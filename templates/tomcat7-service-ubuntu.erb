@@ -27,7 +27,6 @@
 # in_java_home 			: if is black uses try to use the java_home of the system
 # in_java_user			: usually "tomcat7"
 # in_java_group 		: usually "tomcat7"
-# in_other_path			: usually is black
 # in_catalina_base		: usually "/var/lib/tomcat7"
 # in_catalina_home		: usually "/var/share/tomcat7"
 # in_java_opts 			: usually black, if the default is black the script uses "-Djava.awt.headless=true -Xmx128M"
@@ -36,7 +35,7 @@
 
 set -e
 
-PATH=/bin:/usr/bin:/sbin:/usr/sbin:<%= @in_other_path%>
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
 NAME=<%= @in_service_name%>
 DESC="Tomcat servlet engine"
 DEFAULT=/etc/default/$NAME
