@@ -20,11 +20,23 @@
 # Short-Description: Start Tomcat.
 # Description:       Start the Tomcat servlet engine.
 ### END INIT INFO
+### INIT Puppet template info
+# Service adapted to be used as template in a puppet
+# The variables of the template are: 
+# in_service_name 		: usually "tomcat7"
+# in_java_home 			: if is black uses try to use the java_home of the system
+# in_java_user			: usually "tomcat7"
+# in_java_group 		: usually "tomcat7"
+# in_catalina_base		: usually "/var/lib/tomcat7"
+# in_catalina_home		: usually "/var/share/tomcat7"
+# in_java_opts 			: usually black, if the default is black the script uses "-Djava.awt.headless=true -Xmx128M"
+# in_tomcat_security 	        : usually "no"
+### END Puppet template info
 
 set -e
 
 PATH=/bin:/usr/bin:/sbin:/usr/sbin
-NAME=<%= @in_service_name %>
+NAME=<%= @in_service_name%>
 DESC="Tomcat servlet engine"
 DEFAULT=/etc/default/$NAME
 JVM_TMP=/tmp/tomcat7-$NAME-tmp
@@ -50,8 +62,8 @@ fi
 # The following variables can be overwritten in $DEFAULT
 
 # Run Tomcat 7 as this user ID and group ID
-TOMCAT7_USER=tomcat7
-TOMCAT7_GROUP=tomcat7
+TOMCAT7_USER=<%= @in_tomcat_user%>
+TOMCAT7_GROUP=<%= @in_tomcat_group%>
 
 # this is a work-around until there is a suitable runtime replacement 
 # for dpkg-architecture for arch:all packages
@@ -74,38 +86,49 @@ find_openjdks()
         done
 }
 
-OPENJDKS=""
-find_openjdks
-# The first existing directory is used for JAVA_HOME (if JAVA_HOME is not
-# defined in $DEFAULT)
-JDK_DIRS="/usr/lib/jvm/default-java ${OPENJDKS} /usr/lib/jvm/java-6-openjdk /usr/lib/jvm/java-6-sun"
+PERSONAL_JDK=<%= @in_java_home %>
+# -z es vacio String length null
+if [-z $PERSONAL_JDK]; 
+then 
+	OPENJDKS=""
+	find_openjdks
+	# The first existing directory is used for JAVA_HOME (if JAVA_HOME is not
+	# defined in $DEFAULT)
+	JDK_DIRS="/usr/lib/jvm/default-java ${OPENJDKS} /usr/lib/jvm/java-6-openjdk /usr/lib/jvm/java-6-sun"
 
-# Look for the right JVM to use
-for jdir in $JDK_DIRS; do
-    if [ -r "$jdir/bin/java" -a -z "${JAVA_HOME}" ]; then
-	JAVA_HOME="$jdir"
-    fi
-done
+	# Look for the right JVM to use
+	for jdir in $JDK_DIRS; do
+		if [ -r "$jdir/bin/java" -a -z "${JAVA_HOME}" ]; then
+		JAVA_HOME="$jdir"
+		fi
+	done
+else 
+	JAVA_HOME="${PERSONAL_JDK}"
+fi
 export JAVA_HOME
 
 # Directory where the Tomcat 6 binary distribution resides
-CATALINA_HOME=/usr/share/$NAME
+CATALINA_HOME=<%= @in_catalina_home %>
 
 # Directory for per-instance configuration files and webapps
-CATALINA_BASE=/var/lib/$NAME
+CATALINA_BASE=<%= @in_catalina_base %>
 
 # Use the Java security manager? (yes/no)
-TOMCAT7_SECURITY=no
+TOMCAT7_SECURITY=<%= @in_tomcat_security %>
 
 # Default Java options
 # Set java.awt.headless=true if JAVA_OPTS is not set so the
 # Xalan XSL transformer can work without X11 display on JDK 1.4+
 # It also looks like the default heap size of 64M is not enough for most cases
 # so the maximum heap size is set to 128M
-if [ -z "$JAVA_OPTS" ]; then
-	JAVA_OPTS="-Djava.awt.headless=true -Xmx128M"
+IN_JAVA_OPTS=<%= @in_java_opts %>
+if [ -z "$IN_JAVA_OPTS" ]; then 
+	if [ -z "$JAVA_OPTS" ]; then
+		JAVA_OPTS="-Djava.awt.headless=true -Xmx128M"
+	fi
+else
+	JAVA_OPTS="$IN_JAVA_OPTS"
 fi
-
 # End of variables that can be overwritten in $DEFAULT
 
 # overwrite settings from default file
