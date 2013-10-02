@@ -1,1 +1,5 @@
 service_path : '/etc/init.d'
+
+
+template_file : 'tomcat7/tomcat7-service-debian.erb'
+

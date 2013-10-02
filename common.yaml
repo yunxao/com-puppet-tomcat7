@@ -1,9 +1,26 @@
-tomcat_service_name : 'tomcat7'
-tomcat_version : &version '7.0.42'
-tomcat_package : 
- - "apache-tomcat-" 
- - *version 
- - ".tar.gz"
-java_home : 'tomcat7/common/hello'
-tmp : "%{::osfamily}"
+tomcat_security       : 'no' # yes/no
+tomcat_name           : &name 'tomcat7'
+tomcat_service_name   : *name
+tomcat_user           : *name
+tomcat_group          : *name
+tomcat_version        : &version '7.0.42'
+tomcat_package        : 
+      - "apache-tomcat-" 
+      - *version 
+      - ".tar.gz"
+
+
+java_home             : ''
+java_opts             : ''
+
+catalina_home         : 
+      - "/var/share/"
+      - *name
+catalina_base         : 
+      - "/var/lib/"
+      - *name
+
+template_file         : 'tomcat7/tomcat7-service.erb'
+
+tmp                   : "%{::osfamily}"
 
