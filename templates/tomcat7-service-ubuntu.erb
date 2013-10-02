@@ -20,10 +20,23 @@
 # Short-Description: Start Tomcat.
 # Description:       Start the Tomcat servlet engine.
 ### END INIT INFO
+### INIT Puppet template info
+# Service adapted to be used as template in a puppet
+# The variables of the template are: 
+# in_service_name 		: usually "tomcat7"
+# in_java_home 			: if is black uses try to use the java_home of the system
+# in_java_user			: usually "tomcat7"
+# in_java_group 		: usually "tomcat7"
+# in_other_path			: usually is black
+# in_catalina_base		: usually "/var/lib/tomcat7"
+# in_catalina_home		: usually "/var/share/tomcat7"
+# in_java_opts 			: usually black, if the default is black the script uses "-Djava.awt.headless=true -Xmx128M"
+# in_tomcat_security 	: usually "no"
+### END Puppet template info
 
 set -e
 
-PATH=/bin:/usr/bin:/sbin:/usr/sbin:<%= @in_other_PATH%>
+PATH=/bin:/usr/bin:/sbin:/usr/sbin:<%= @in_other_path%>
 NAME=<%= @in_service_name%>
 DESC="Tomcat servlet engine"
 DEFAULT=/etc/default/$NAME
@@ -102,7 +115,7 @@ CATALINA_HOME=<%= @in_catalina_home %>
 CATALINA_BASE=<%= @in_catalina_base %>
 
 # Use the Java security manager? (yes/no)
-TOMCAT7_SECURITY=<%= @in_tomca_security %>
+TOMCAT7_SECURITY=<%= @in_tomcat_security %>
 
 # Default Java options
 # Set java.awt.headless=true if JAVA_OPTS is not set so the
