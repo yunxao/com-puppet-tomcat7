@@ -4,11 +4,14 @@ tomcat_service_name   : *name
 tomcat_user           : *name
 tomcat_group          : *name
 tomcat_version        : &version '7.0.42'
-tomcat_package        : 
-      - "apache-tomcat-" 
-      - *version 
+tomcat_package        : &package
+      - "apache-tomcat-"
+      - *version
+tomcat_filename      : 
+      - *package 
       - ".tar.gz"
 
+tomcat_service_action : "stop"
 
 java_home             : ''
 java_opts             : ''

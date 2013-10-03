@@ -1,5 +1,7 @@
-service_path : '/etc/init.d'
+service_path  : '/etc/init.d'
 
 
+tmp_dir       : '/tmp'
+tar_command   : '/bin/tar'
 template_file : 'tomcat7/tomcat7-service-debian.erb'
 
