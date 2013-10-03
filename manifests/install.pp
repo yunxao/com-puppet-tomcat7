@@ -48,6 +48,16 @@ class tomcat7::install {
   $in_tomcat_security = "${tomcat7::params::tomcat_security}"
   $in_tomcat_user     = "${tomcat7::params::tomcat_user}"
   $in_tomcat_group    = "${tomcat7::params::tomcat_group}"
+  $in_tomcat_package  = "${tomcat7::params::tomcat_package}"
+  $in_tomcat_filename = "${tomcat7::params::tomcat_filename}"
+  $in_tmp_dir         = "${tomcat7::params::tmp_dir}"
+  $in_tar_command     = "${tomcat7::params::tar_command}"
+
+  package { 'tar':
+    ensure => 'installed',
+  }
+
+
   
   
   file  { 'tomcat_service' : 
@@ -63,6 +73,23 @@ class tomcat7::install {
     owner => "$in_tomcat_user",
     group => "$in_tomcat_group", 
   }
+  file { "${in_tomcat_filename}" : 
+    ensure   => file, 
+    path     => "${in_tmp_dir}/${in_tomcat_filename}", 
+    owner    => "$in_tomcat_user",
+    group    => "$in_tomcat_group",
+    source   => "puppet:///modules/tomcat7/${in_tomcat_filename}",  
+  }
+
+   # zip file of tomcat has the directory inside and is needed to remove it
+   exec { "uncompress tomcat":
+         cwd     => "${in_catalina_home}",
+         command => "${in_tar_command} xzvf /tmp/${in_tomcat_filename} --xform='s,${in_tomcat_package},.,'",
+         require => [ Package["tar"], File["${in_tomcat_filename}"], Tomcat7::Create_dir['catalina_home_1']] ,
+   }
+
+   
+
 #  file {'catalina_home_2' : 
 #    ensure  => directory, 
 #    path    => "$in_catalina_home",
