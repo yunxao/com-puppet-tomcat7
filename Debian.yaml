@@ -1,0 +1,6 @@
+jre_package            : &jre_package 'jre-7u40-linux-x64'
+jre_filename           : 
+ - *jre_package
+ - 'tar.gz'
+installation_path      : '/usr/bin'
+installation_directory : 'jre'
