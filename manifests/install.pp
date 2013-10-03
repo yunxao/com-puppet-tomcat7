@@ -52,9 +52,12 @@ class tomcat7::install {
   $in_tomcat_filename = "${tomcat7::params::tomcat_filename}"
   $in_tmp_dir         = "${tomcat7::params::tmp_dir}"
   $in_tar_command     = "${tomcat7::params::tar_command}"
-
-  package { 'tar':
-    ensure => 'installed',
+  
+  # check if tar is defined
+  if ! defined(Package['tar']) {
+    package { 'tar':
+      ensure => installed,
+    }
   }
 
 
