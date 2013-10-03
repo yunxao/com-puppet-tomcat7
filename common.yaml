@@ -11,7 +11,7 @@ tomcat_filename      :
       - *package 
       - ".tar.gz"
 
-tomcat_service_action : "stop"
+tomcat_service_action : "stop" # start, stop, restart, status
 
 java_home             : ''
 java_opts             : ''
