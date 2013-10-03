@@ -8,6 +8,7 @@ class tomcat7 (
 
   include tomcat7::params 
   include tomcat7::install
+  include tomcat7::deploy
 
 #  notify { "${tomcat7::params::tomcat_package}": }
 #  notify { "-${tomcat7::params::service_path}": }

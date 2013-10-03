@@ -10,6 +10,7 @@ class tomcat7::params {
   $java_opts             = hiera('java_opts')
   $catalina_base         = hiera('catalina_base')
   $catalina_home         = hiera('catalina_home')
+  $catalina_webdir       = hiera('catalina_webdir')
   $tomcat_security       = hiera('tomcat_security')
   $tomcat_user           = hiera('tomcat_user')
   $tomcat_group          = hiera('tomcat_group')
@@ -20,5 +21,9 @@ class tomcat7::params {
   $tmp_dir               = hiera('tmp_dir')
   $tar_command           = hiera('tar_command')
   $tomcat_service_action = hiera('tomcat_service_action')
+  $array_token           = hiera('array_token')
+
+  # Arrays: 
+  $deploy_wars           = hiera_array('deploy_wars').join("$array_token")
 #  notify{$service_path : }
 }
