@@ -1,3 +1,5 @@
+array_token           : '::'
+
 tomcat_security       : 'no' # yes/no
 tomcat_name           : &name 'tomcat7'
 tomcat_service_name   : *name
@@ -16,12 +18,15 @@ tomcat_service_action : "stop" # start, stop, restart, status
 java_home             : ''
 java_opts             : ''
 
-catalina_home         : 
-      - "/var/share/"
+catalina_home         : &catalina_home
+      - "/var/lib/"
       - *name
 catalina_base         : 
       - "/var/lib/"
       - *name
+catalina_webdir       : 
+      - *catalina_home
+      - "/webapps"
 
 template_file         : 'tomcat7/tomcat7-service.erb'
 

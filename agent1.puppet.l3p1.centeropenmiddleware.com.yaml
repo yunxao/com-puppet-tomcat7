@@ -1,2 +1,6 @@
-java_home : "/usr/bin/jre" 
+java_home   : "/usr/bin/jre" 
+
+deploy_wars        : 
+   - "BaseX771.war"
+#   - "Base2.war
 
