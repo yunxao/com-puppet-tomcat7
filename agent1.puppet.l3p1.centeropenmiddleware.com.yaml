@@ -1,5 +1,5 @@
 java_home   : "/usr/bin/jre" 
-tomcat_service_action : 'stop' 
+tomcat_service_action : 'start' 
 
 deploy_wars        : 
    - "BaseX771.war"
