@@ -93,18 +93,18 @@ stop() {
     echo "Stoping Tomcat"
     $CATALINA_HOME/bin/shutdown.sh
  
-    let kwait=$SHUTDOWN_WAIT
-    count=0;
-    until [ `ps -p $pid | grep -c $pid` = '0' ] || [ $count -gt $kwait ]
-    do
-      echo -n -e "\nwaiting for processes to exit";
-      sleep 1
-      let count=$count+1;
-    done
-    if [ $count -gt $kwait ]; then
-      echo -n -e "\nkilling processes which didn't stop after $SHUTDOWN_WAIT seconds"
-      kill -9 $pid
-    fi
+#    sleep $SHUTDOWN_WAIT
+#    count=0;
+#    until [ `ps -p $pid | grep -c $pid` = '0' | $count -eq $SHUTDOWN_WAIT] 
+#    do
+#      echo -n -e "\nwaiting for processes to exit";
+#      sleep 1
+#      count=$count+1;
+#    done
+#    if [ $count -gt $kwait ]; then
+#      echo -n -e "\nkilling processes which didn't stop after $SHUTDOWN_WAIT seconds"
+#      kill -9 $pid
+#    fi
   else
     echo "Tomcat is not running"
   fi
@@ -130,6 +130,7 @@ stop)
   ;;
 restart)
   stop
+  sleep 5
   start
   ;;
 status)
