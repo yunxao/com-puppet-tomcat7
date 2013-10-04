@@ -69,7 +69,7 @@ class tomcat7::install {
     owner    => root, 
     group    => root, 
     mode     => 755, 
-    content  => template('tomcat7/tomcat7-service.erb') ,
+    content  => template("$template_file") ,
   }
   tomcat7::create_dir {'catalina_home_1' : 
     path  => "$in_catalina_home", 
