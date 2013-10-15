@@ -1,3 +1,8 @@
+# tomcat7 module
+# install.pp
+# Copyright Francisco Huertas, Center for Open Middleware, Universidad Politecnica de Madrid
+
+
 define tomcat7::create_dir ($path, $owner, $group) {
   $a1 = split ($path,'/')
   each($a1) |$value| {
@@ -52,7 +57,7 @@ class tomcat7::install {
   $in_tomcat_filename = "${tomcat7::params::tomcat_filename}"
   $in_tmp_dir         = "${tomcat7::params::tmp_dir}"
   $in_tar_command     = "${tomcat7::params::tar_command}"
-  
+    
   # check if tar is defined
   if ! defined(Package['tar']) {
     package { 'tar':
@@ -76,6 +81,23 @@ class tomcat7::install {
     owner => "$in_tomcat_user",
     group => "$in_tomcat_group", 
   }
+
+  file { 'bash-file':
+    ensure  => file,  
+    path    => "/${in_tmp_dir}/checkversion.sh", 
+    content => template("${module_name}/${osfamily}-checkversion.sh.erb"),
+    mode    => 775, 
+    owner   => "root", 
+    group   => "root",
+    require => File["${in_tomcat_filename}"] 
+    
+  }
+  exec {"/${in_tmp_dir}/checkversion.sh" : 
+    require  => File['bash-file'], 
+  }
+  
+  
+  
   file { "${in_tomcat_filename}" : 
     ensure   => file, 
     path     => "${in_tmp_dir}/${in_tomcat_filename}", 
@@ -85,11 +107,11 @@ class tomcat7::install {
   }
 
    # zip file of tomcat has the directory inside and is needed to remove it
-   exec { "uncompress tomcat":
-         cwd     => "${in_catalina_home}",
-         command => "${in_tar_command} xzvf /tmp/${in_tomcat_filename} --xform='s,${in_tomcat_package},.,'",
-         require => [ Package["tar"], File["${in_tomcat_filename}"], Tomcat7::Create_dir['catalina_home_1']] ,
-   }
+#  exec { "uncompress tomcat":
+#        cwd     => "${in_catalina_home}",
+#        command => "${in_tar_command} xzvf /tmp/${in_tomcat_filename} --xform='s,${in_tomcat_package},.,'",
+#        require => [ Package["tar"], File["${in_tomcat_filename}"], Tomcat7::Create_dir['catalina_home_1']] ,
+#  }
 
    
 

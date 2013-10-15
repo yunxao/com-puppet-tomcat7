@@ -1,3 +1,6 @@
+# tomcat7 module
+# deploy.pp
+# Copyright Francisco Huertas, Center for Open Middleware, Universidad Politecnica de Madrid
 class tomcat7::deploy {
   $at = "${tomcat7::params::array_token}"
   #an array cannot be copy, it can be join and then split

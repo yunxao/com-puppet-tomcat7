@@ -1,3 +1,6 @@
+# tomcat7 module
+# init.pp
+# Copyright Francisco Huertas, Center for Open Middleware, Universidad Politecnica de Madrid
 class tomcat7 (
   $catalina_home = "",
   $java_home = "") 

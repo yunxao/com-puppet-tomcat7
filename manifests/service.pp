@@ -1,3 +1,6 @@
+# tomcat7 module
+# service.pp
+# Copyright Francisco Huertas, Center for Open Middleware, Universidad Politecnica de Madrid
 class tomcat7::service() {
   include tomcat7::params
   $tomcat_service_action = "${tomcat7::params::tomcat_service_action}"
