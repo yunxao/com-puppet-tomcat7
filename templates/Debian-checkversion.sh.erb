@@ -1,0 +1,17 @@
+#!/bin/bash 
+
+# Debian-checkversion.sh 
+# Copyright Francisco Huertas, Center for Open Middleware, Universidad Politecnica de Madrid
+md5_1=`md5sum <%= @in_tomcat_filename %> | tr -s ' ' | cut -d ' ' -f 1`
+md5_2=`md5sum <%= @in_tomcat_filename %>.back | tr -s ' ' | cut -d ' ' -f 1`
+if [ "$md5_1" == "$md5_2" ]; then  
+  echo "Tomcat is in correct version" > "result.txt"
+else 
+  echo "updating tomcat" > "result.txt"
+  tar xzvf <%= @in_tomcat_filename %> 
+  mv <%= @in_tomcat_package %> <%= @in_catalina_home %>
+  cp <%= @in_tomcat_filename %> <%= @in_tomcat_filename %>.back 
+fi 
+echo $md5_1 $md5_2> "tt"
+
+
