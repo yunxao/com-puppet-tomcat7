@@ -1,3 +1,7 @@
+# jre_install module
+# install.pp
+# Copyright Francisco Huertas, Center for Open Middleware, Universidad Politecnica de Madrid
+
 define jre_install::create_dir ($path, $owner, $group) {
   $a1 = split ($path,'/')
   each($a1) |$value| {
@@ -29,6 +33,7 @@ define jre_install::create_dir ($path, $owner, $group) {
 
 class jre_install::install () {
   $jre_filename              = "${jre_install::params::jre_filename}"
+  $java_home                 = "${jre_install::params::java_home}"
   $jre_package               = "${jre_install::params::jre_package}"
   $installation_path         = "${jre_install::params::installation_path}"
   $installation_directory    = "${jre_install::params::installation_directory}"
@@ -54,11 +59,30 @@ class jre_install::install () {
     group    => "root",
     source   => "puppet:///modules/jre_install/${jre_filename}",
   }
+  notify {"algo": }
+
+  file {'bash-file' : 
+    ensure   => file, 
+    path     => "${tmp_dir}/check-jre-version.sh",
+    content => template("${module_name}/${osfamily}-checkversion.sh.erb"),
+    mode    => 775,
+    owner   => "root",
+    group   => "root",
+    require => File["${jre_filename}"], 
+    before  => Notify['algo'], 
+
+  }
+  exec {"${tmp_dir}/check-jre-version.sh" :
+    require  => File['bash-file'],
+  }
+
+
+ 
   # the xform is used to replace strings
-  exec { "uncompress jre":
-    cwd     => "${installation_path}",
-    command => "${tar_command} xzvf /tmp/${jre_filename} --xform='s,${jre_package},${installation_directory},'",
-    require => [ Package["tar"], File["${jre_filename}"], Jre_install::Create_dir['java_dir']] ,
-   }
+#  exec { "uncompress jre":
+#    cwd     => "${installation_path}",
+#    command => "${tar_command} xzvf /tmp/${jre_filename} --xform='s,${jre_package},${installation_directory},'",
+#    require => [ Package["tar"], File["${jre_filename}"], Jre_install::Create_dir['java_dir']] ,
+#   }
 }
 

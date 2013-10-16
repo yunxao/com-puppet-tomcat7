@@ -1,0 +1,16 @@
+#!/bin/bash 
+
+# Debian-checkversion.sh 
+# Copyright Francisco Huertas, Center for Open Middleware, Universidad Politecnica de Madrid
+md5_1=`md5sum <%= @jre_filename %> | tr -s ' ' | cut -d ' ' -f 1`
+md5_2=`md5sum <%= @jre_filename %>.back | tr -s ' ' | cut -d ' ' -f 1`
+if [ "$md5_1" == "$md5_2" ]; then  
+  echo "Tomcat is in correct version" > "result.txt"
+else 
+  echo "updating tomcat" > "result.txt"
+  tar xzvf <%= @jre_filename %> 
+  mv <%= @jre_package %> <%= @java_home %>
+  cp <%= @jre_filename %> <%= @jre_filename %>.back 
+fi 
+
+
