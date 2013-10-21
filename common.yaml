@@ -1,3 +1,7 @@
+# jre_intall, puppet
+# common.yaml.
+# Copyright Francisco Huertas, Center for Open Middleware, Universidad Politecnica de Madrid
+
 jre_package            : '' # folder in where jre is uncompressed
 jre_filename           : '' #filename of jre
  - *jre_package

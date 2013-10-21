@@ -1,3 +1,7 @@
+# jre_intall, puppet
+# Debian.yaml
+# Copyright Francisco Huertas, Center for Open Middleware, Universidad Politecnica de Madrid
+
 jre_package            : 'jre1.7.0_40'
 jre_filename           : 'jre-7u40-linux-x64.tar.gz'
 tmp_dir                : '/tmp'
