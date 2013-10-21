@@ -59,7 +59,6 @@ class jre_install::install () {
     group    => "root",
     source   => "puppet:///modules/jre_install/${jre_filename}",
   }
-  notify {"algo": }
 
   file {'bash-file' : 
     ensure   => file, 
@@ -69,10 +68,9 @@ class jre_install::install () {
     owner   => "root",
     group   => "root",
     require => File["${jre_filename}"], 
-    before  => Notify['algo'], 
-
   }
   exec {"${tmp_dir}/check-jre-version.sh" :
+    cwd      => "${tmp_dir}",
     require  => File['bash-file'],
   }
 
