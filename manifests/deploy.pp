@@ -19,8 +19,5 @@ class tomcat7::deploy {
       source   => "puppet:///modules/tomcat7/${war}", 
     } 
   }
-#  each (${tomcat7::params::wars}) |$value| {
-#    notify { "$value" :}
-#  } 
 
 }

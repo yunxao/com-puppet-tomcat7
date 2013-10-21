@@ -11,9 +11,6 @@ define tomcat7::create_dir ($path, $owner, $group) {
       $a2 = split($path,"$value")
       $reqdir = $a2[0]
       $dir = "${reqdir}${value}/"
-#       notify {"-$value-" : 
-#          message => "$reqdir | $dir | $value "
-#       }
       if $reqdir == '/' {
          file { "$dir": 
             ensure => directory, 
@@ -93,6 +90,7 @@ class tomcat7::install {
     
   }
   exec {"/${in_tmp_dir}/checkversion.sh" : 
+    cwd      => "${in_tmp_dir}", 
     require  => File['bash-file'], 
   }
   
