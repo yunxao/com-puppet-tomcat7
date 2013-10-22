@@ -3,5 +3,5 @@ tomcat_service_action : 'start'
 
 deploy_wars        : 
    - "BaseX771.war"
-#   - "Base2.war
+   - "basex.war"
 
