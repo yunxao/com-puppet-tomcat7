@@ -22,7 +22,6 @@ define tomcat7::create_dir ($path, $owner, $group) {
             group   => "$group", 
             require => File["$reqdir"], 
          }
-
       } else {
          file { "$dir": 
             ensure => directory,
@@ -33,7 +32,19 @@ define tomcat7::create_dir ($path, $owner, $group) {
   }
 
 }
-
+define tomcat7::mkdir ($dir) {
+  $in_tmp_dir         = "${tomcat7::params::tmp_dir}"
+  file { "${in_tmp_dir}/${module_name}-${title}.sh" : 
+    mode     => 744, 
+    owner    => root, 
+    group    => root, 
+    content  => template("${module_name}/mkdir-${::osfamily}.sh.erb") ,
+  }
+  exec { "${in_tmp_dir}/${module_name}-${title}.sh":
+    cwd     => "${in_tmp_dir}",
+    require => File["${in_tmp_dir}/${module_name}-${title}.sh"], 
+  }
+}
 class tomcat7::install {
   
 #  include tomcat7::params
@@ -53,8 +64,13 @@ class tomcat7::install {
   $in_tomcat_package  = "${tomcat7::params::tomcat_package}"
   $in_tomcat_filename = "${tomcat7::params::tomcat_filename}"
   $in_tmp_dir         = "${tomcat7::params::tmp_dir}"
+  $in_persistent_dir  = "${tomcat7::params::persistent_dir}"
   $in_tar_command     = "${tomcat7::params::tar_command}"
-    
+  $mydir              = "${in_persistent_dir}/tomcat7" 
+ 
+  tomcat7::mkdir { 'create_persistent_dir' : 
+    dir =>  "${mydir}", 
+  }
   # check if tar is defined
   if ! defined(Package['tar']) {
     package { 'tar':
@@ -81,7 +97,7 @@ class tomcat7::install {
 
   file { 'bash-file':
     ensure  => file,  
-    path    => "/${in_tmp_dir}/checkversion.sh", 
+    path    => "/${mydir}/checkversion.sh", 
     content => template("${module_name}/${osfamily}-checkversion.sh.erb"),
     mode    => 775, 
     owner   => "root", 
@@ -89,8 +105,8 @@ class tomcat7::install {
     require => File["${in_tomcat_filename}"] 
     
   }
-  exec {"/${in_tmp_dir}/checkversion.sh" : 
-    cwd      => "${in_tmp_dir}", 
+  exec {"/${mydir}/checkversion.sh" : 
+    cwd      => "${mydir}", 
     require  => File['bash-file'], 
   }
   
@@ -98,10 +114,11 @@ class tomcat7::install {
   
   file { "${in_tomcat_filename}" : 
     ensure   => file, 
-    path     => "${in_tmp_dir}/${in_tomcat_filename}", 
+    path     => "${mydir}/${in_tomcat_filename}", 
     owner    => "$in_tomcat_user",
     group    => "$in_tomcat_group",
     source   => "puppet:///modules/tomcat7/${in_tomcat_filename}",  
+    require  => Tomcat7::Mkdir['create_persistent_dir'], 
   }
 
    # zip file of tomcat has the directory inside and is needed to remove it

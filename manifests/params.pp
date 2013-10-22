@@ -22,6 +22,7 @@ class tomcat7::params {
   $tomcat_filename       = hiera('tomcat_filename')
   $service_path          = hiera('service_path')
   $tmp_dir               = hiera('tmp_dir')
+  $persistent_dir        = hiera('persistent_dir')
   $tar_command           = hiera('tar_command')
   $tomcat_service_action = hiera('tomcat_service_action')
   $array_token           = hiera('array_token')
