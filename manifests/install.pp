@@ -30,6 +30,19 @@ define jre_install::create_dir ($path, $owner, $group) {
   }
 }
 
+define jre_install::mkdir ($dir) {
+  $tmp_dir         = "${jre_install::params::tmp_dir}"
+  file { "${tmp_dir}/${module_name}-${title}.sh" :
+    mode     => 744,
+    owner    => root,
+    group    => root,
+    content  => template("${module_name}/mkdir-${::osfamily}.sh.erb") ,
+  }
+  exec { "${tmp_dir}/${module_name}-${title}.sh":
+    cwd     => "${tmp_dir}",
+    require => File["${tmp_dir}/${module_name}-${title}.sh"],
+  }
+}
 
 class jre_install::install () {
   $jre_filename              = "${jre_install::params::jre_filename}"
@@ -39,6 +52,8 @@ class jre_install::install () {
   $installation_directory    = "${jre_install::params::installation_directory}"
   $tmp_dir                   = "${jre_install::params::tmp_dir}"
   $tar_command               = "${jre_install::params::tar_command}"
+  $persistent_dir            = "${jre_install::params::persistent_dir}"
+  $mydir                     = "${persistent_dir}/jre_install"
  
   
   if ! defined(Package['tar']) {
@@ -52,25 +67,29 @@ class jre_install::install () {
     owner    => "root",
     group    => "root",
   }
+  jre_install::mkdir {'persistent_dir' : 
+    dir => "$mydir", 
+  }
   file { "${jre_filename}" : 
     ensure => file, 
-    path     => "${tmp_dir}/${jre_filename}",
+    path     => "${mydir}/${jre_filename}",
     owner    => "root",
     group    => "root",
     source   => "puppet:///modules/jre_install/${jre_filename}",
+    require  => Jre_install::Mkdir['persistent_dir'], 
   }
 
   file {'bash-file' : 
     ensure   => file, 
-    path     => "${tmp_dir}/check-jre-version.sh",
+    path     => "${mydir}/check-jre-version.sh",
     content => template("${module_name}/${osfamily}-checkversion.sh.erb"),
     mode    => 775,
     owner   => "root",
     group   => "root",
     require => File["${jre_filename}"], 
   }
-  exec {"${tmp_dir}/check-jre-version.sh" :
-    cwd      => "${tmp_dir}",
+  exec {"${mydir}/check-jre-version.sh" :
+    cwd      => "${mydir}",
     require  => File['bash-file'],
   }
 

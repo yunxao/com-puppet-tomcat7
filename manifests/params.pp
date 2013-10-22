@@ -10,4 +10,5 @@ class jre_install::params () {
   $installation_directory = hiera('installation_directory')
   $tmp_dir                = hiera('tmp_dir')
   $tar_command            = hiera('tar_command')
+  $persistent_dir         = hiera('persistent_dir')
 }
