@@ -2,6 +2,10 @@
 # agent1.puppet.l3p1.centeropenmiddleware.com.yaml.pp
 # Copyright Francisco Huertas, Center for Open Middleware, Universidad Politecnica de Madrid
 
-installation_path      : '/usr/bin'
-installation_directory : 'jre'
+installation_path      : &installation_path '/usr/lib'
+installation_directory : &installation_directory 'jre'
+java_home              : 
+ - *installation_path
+ - '/'
+ - *installation_directory
 

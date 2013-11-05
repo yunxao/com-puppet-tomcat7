@@ -9,7 +9,4 @@ jre_filename           : '' #filename of jre
  - 'tar.gz'
 installation_path      : '' #path where the jre must be installed
 installation_directory : '' # folder where the jre must be installed 
-java_home              :
- - *installation_path
- - '/'
- - *installation_directory
+java_home              : '' # The path where the jre will be installed
