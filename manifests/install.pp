@@ -73,8 +73,7 @@ class jre_install::install () {
   $tar_command               = "${jre_install::params::tar_command}"
   $persistent_dir            = "${jre_install::params::persistent_dir}"
   $mydir                     = "${persistent_dir}/jre_install"
- 
-  
+
   # defines tar dependence because the script uses this package
   if ! defined(Package['tar']) {
     package { 'tar':
